@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-const API_KEY = '9MPPC5RXcG1E8weX-CVtMhwEWfe293q_60lCYt3KLVo';
+const API_KEY = import.meta.env.VITE_MAP_API;
 
 
 class LogoControl {

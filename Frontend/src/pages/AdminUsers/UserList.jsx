@@ -13,7 +13,8 @@ function UserList({ users, roles, fighters, onRefresh, API }) {
       const token = localStorage.getItem("token");
       const res = await fetch(`${API}/api/users/${id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json" },
       });
       if (res.ok) onRefresh();
       else {

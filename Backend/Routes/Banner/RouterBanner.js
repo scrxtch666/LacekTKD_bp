@@ -2,6 +2,7 @@ const express = require("express");
 const { createUpload, getFilePath } = require("../../utils/upload");
 const db = require("../../Libs/db");
 const fs = require("fs");
+const { verifyToken, isAdminOrTrainer } = require("../../auth/auth")
 
 const router = express.Router();
 
@@ -29,7 +30,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.post("/", upload.single("image"), (req, res) => {
+router.post("/", verifyToken, isAdminOrTrainer, upload.single("image"), (req, res) => {
   console.log("Soubor nahrán:", req.file);
   console.log("Cesta:", req.file?.path);
   const { banner_name, active } = req.body;
@@ -63,7 +64,7 @@ router.post("/", upload.single("image"), (req, res) => {
   );
 });
 
-router.patch("/:id/toggle", (req, res) => {
+router.patch("/:id/toggle", verifyToken, isAdminOrTrainer, (req, res) => {
   const { id } = req.params;
   const { active } = req.body;
 
@@ -89,7 +90,7 @@ router.patch("/:id/toggle", (req, res) => {
   );
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", verifyToken, isAdminOrTrainer, (req, res) => {
   const { id } = req.params;
 
   db.query("SELECT img_path FROM banner WHERE id = ?", [id], (err, results) => {

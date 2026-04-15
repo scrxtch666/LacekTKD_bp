@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 const formatDate = (d) => (d ? new Date(d).toLocaleDateString("cs-CZ") : "—");
 
+  const authHeader = () => ({
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+});
+
 function TournamentRegistrations({
   registrations,
   loading,
@@ -18,10 +22,9 @@ function TournamentRegistrations({
 
   const handleAdminUnregister = async (id) => {
     if (!confirm("Odhlásit závodníka?")) return;
-    const token = localStorage.getItem("token");
     const res = await fetch(`${API}/api/tournamentRegistration/${id}`, {
       method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: authHeader(),
     });
     if (res.ok) onRefresh();
     else alert("Nepodařilo se odhlásit závodníka");

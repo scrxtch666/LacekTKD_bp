@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const db = require("../Libs/db");
-const { verifyToken } = require("./auth");
+const { verifyToken, isAdmin } = require("./auth");
 
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET || "tajnyklic";
 
@@ -101,7 +101,7 @@ router.post("/login", (req, res) => {
   );
 });
 
-router.get("/pending", verifyToken, (req, res) => {
+router.get("/pending", verifyToken, isAdmin,  (req, res) => {
   db.query(
     `SELECT id, login, email FROM users WHERE status = 'pending' ORDER BY id DESC`,
     (err, results) => {
@@ -111,7 +111,7 @@ router.get("/pending", verifyToken, (req, res) => {
   );
 });
 
-router.put("/approve/:id", verifyToken, (req, res) => {
+router.put("/approve/:id", verifyToken, isAdmin,  (req, res) => {
   db.query(
     "UPDATE users SET status = 'approved' WHERE id = ?",
     [req.params.id],
@@ -325,7 +325,7 @@ router.put("/me", verifyToken, async (req, res) => {
   }
 });
 
-router.delete("/delete/:id", verifyToken, (req, res) => {
+router.delete("/delete/:id", verifyToken, isAdmin, (req, res) => {
   db.query(
     "DELETE FROM users WHERE id = ? AND status = 'pending'",
     [req.params.id],

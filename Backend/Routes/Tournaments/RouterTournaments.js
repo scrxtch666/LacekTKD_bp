@@ -6,7 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const db = require("../../Libs/db");
 const { google } = require("googleapis");
-const { verifyToken } = require("../../auth/auth");
+const { verifyToken, isAdminOrTrainer } = require("../../auth/auth");
 const jwt = require("jsonwebtoken");
 const { createUpload, getFilePath } = require("../../utils/upload");
 
@@ -260,7 +260,7 @@ router.delete("/:id/register", verifyToken, (req, res) => {
   );
 });
 
-router.put("/:id/status", verifyToken, (req, res) => {
+router.put("/:id/status", verifyToken, isAdminOrTrainer, (req, res) => {
   const { status } = req.body;
   if (!["completed", "uncompleted"].includes(status))
     return res.status(400).json({ error: "Neplatný status" });
@@ -348,7 +348,7 @@ router.get("/:id", (req, res) => {
   );
 });
 
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", verifyToken, isAdminOrTrainer, upload.single("image"), async (req, res) => {
   const {
     name,
     location,
@@ -411,7 +411,7 @@ router.post("/", upload.single("image"), async (req, res) => {
   );
 });
 
-router.put("/:id", upload.single("image"), async (req, res) => {
+router.put("/:id", verifyToken, isAdminOrTrainer, upload.single("image"), async (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -563,7 +563,7 @@ router.post("/:id/register", verifyToken, (req, res) => {
   );
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, isAdminOrTrainer, async (req, res) => {
   const { id } = req.params;
 
   db.query(

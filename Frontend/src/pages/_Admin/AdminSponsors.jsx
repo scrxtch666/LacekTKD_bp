@@ -34,6 +34,9 @@ function AdminSponsors() {
   }, []);
 
   const API = config.API_URL;
+  const authHeader = () => ({
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+});
 
   const fetchSponsors = () => {
     fetch(`${API}/api/sponsors`)
@@ -55,6 +58,7 @@ function AdminSponsors() {
     try {
       const response = await fetch(`${API}/api/sponsors/` + id, {
         method: "DELETE",
+        headers: authHeader(),
       });
       if (response.ok) {
         setSponsors(sponsors.filter((s) => s.id !== id));
@@ -92,6 +96,7 @@ function AdminSponsors() {
     try {
       const response = await fetch(`${API}/api/sponsors`, {
         method: "POST",
+        headers: authHeader(),
         body: formData,
       });
       if (response.ok) {
@@ -158,6 +163,7 @@ function AdminSponsors() {
     try {
       const response = await fetch(`${API}/api/sponsors/` + id, {
         method: "PUT",
+        headers: authHeader(),
         body: formData,
       });
       if (response.ok) {

@@ -45,7 +45,7 @@ router.get("/trainer", (req, res) => {
   );
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, isAdmin, async (req, res) => {
   const { login, password, email, role_id, fighter_id, status } = req.body;
 
   if (!login || !password || !role_id) {
@@ -87,7 +87,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, isAdmin, async (req, res) => {
   const { id } = req.params;
   const { login, password, email, role_id, fighter_id } = req.body;
 

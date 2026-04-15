@@ -13,6 +13,7 @@ function UserCard({ user, roles, fighters, isEditing, onStartEdit, onCancelEdit,
   const [form, setForm] = useState({});
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const token = localStorage.getItem("token");
 
   const startEdit = () => {
     setForm({
@@ -38,7 +39,9 @@ function UserCard({ user, roles, fighters, isEditing, onStartEdit, onCancelEdit,
     try {
       const res = await fetch(`${API}/api/users/${user.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+         },
         body: JSON.stringify(payload),
       });
       if (res.ok) onEditSuccess();

@@ -4,6 +4,9 @@ import { Pencil, Trash2 } from "lucide-react";
 import FighterCard from "./FighterCard";
 import FighterEditForm from "./FighterEditForm";
 
+const authHeader = () => ({
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+});
 function FighterList({ fighters, belts, categories, API, onRefresh }) {
   const navigate = useNavigate();
   const [editingId, setEditingId] = useState(null);
@@ -15,6 +18,7 @@ function FighterList({ fighters, belts, categories, API, onRefresh }) {
     try {
       const res = await fetch(`${API}/api/fighters/${id}`, {
         method: "DELETE",
+        headers: authHeader(),
       });
       if (res.ok) onRefresh();
       else alert("Nepodařilo se smazat závodníka");

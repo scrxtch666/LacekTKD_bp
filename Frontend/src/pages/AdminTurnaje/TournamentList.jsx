@@ -13,6 +13,10 @@ import TournamentForm from "./TournamentForm";
 
 const formatDate = (d) => (d ? new Date(d).toLocaleDateString("cs-CZ") : "—");
 
+  const authHeader = () => ({
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+}); 
+
 const getColorClass = (date) => {
   const diff = (new Date(date) - new Date()) / (1000 * 60 * 60 * 24);
   if (diff < 0) return "text-red-600";
@@ -38,6 +42,7 @@ function TournamentList({
     try {
       const res = await fetch(`${API}/api/tournaments/${id}`, {
         method: "DELETE",
+         headers: authHeader(),
       });
       if (res.ok) onRefresh();
       else alert("Nepodařilo se smazat turnaj");
@@ -61,8 +66,8 @@ function TournamentList({
     const res = await fetch(`${API}/api/tournaments/${tournament.id}/status`, {
       method: "PUT",
       headers: {
+        ...authHeader(),
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ status: newStatus }),
     });

@@ -14,6 +14,10 @@ const EMPTY = {
   image: null,
 };
 
+const authHeader = () => ({
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+});
+
 function FighterAddForm({ belts, categories, API, onSuccess, onCancel }) {
   const [form, setForm] = useState(EMPTY);
   const [preview, setPreview] = useState(null);
@@ -45,6 +49,7 @@ function FighterAddForm({ belts, categories, API, onSuccess, onCancel }) {
     try {
       const res = await fetch(`${API}/api/fighters`, {
         method: "POST",
+        headers: authHeader(),
         body: formData,
       });
       if (res.ok) onSuccess();

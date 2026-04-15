@@ -108,7 +108,7 @@ router.get("/countAll", (req, res) => {
   });
 });
 
-router.post("/", upload.single("image"), (req, res) => {
+router.post("/", verifyToken, isAdminOrTrainer, upload.single("image"), (req, res) => {
   const {
     name,
     surname,
@@ -252,7 +252,7 @@ router.get("/:id", (req, res) => {
   );
 });
 
-router.put("/:id", upload.single("image"), (req, res) => {
+router.put("/:id", verifyToken, isAdminOrTrainer, upload.single("image"), (req, res) => {
   const { id } = req.params;
   const {
     name,
@@ -405,7 +405,7 @@ router.put("/:id", upload.single("image"), (req, res) => {
     return res.status(500).json({ error: "Interní chyba serveru" });
   }
 });
-router.delete("/:id", (req, res) => {
+router.delete("/:id", verifyToken, isAdminOrTrainer, (req, res) => {
   const { id } = req.params;
 
   db.query(

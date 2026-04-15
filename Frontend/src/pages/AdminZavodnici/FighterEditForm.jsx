@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Upload, X, Check } from "lucide-react";
 
+const authHeader = () => ({
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+});
 function FighterEditForm({
   fighter,
   belts,
@@ -49,6 +52,7 @@ function FighterEditForm({
     try {
       const res = await fetch(`${API}/api/fighters/${fighter.id}`, {
         method: "PUT",
+        headers: authHeader(),
         body: formData,
       });
       if (res.ok) onSuccess();

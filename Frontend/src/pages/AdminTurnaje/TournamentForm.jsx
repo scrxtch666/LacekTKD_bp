@@ -64,7 +64,9 @@ function TournamentForm({
     const method = isEdit ? "PUT" : "POST";
 
     try {
-      const res = await fetch(url, { method, body: formData });
+      const res = await fetch(url, { method, body: formData, headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        } });
       if (res.ok) onSuccess();
       else {
         const d = await res.json();

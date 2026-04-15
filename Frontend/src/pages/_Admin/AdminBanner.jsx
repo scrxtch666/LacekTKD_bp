@@ -10,6 +10,9 @@ import {
 } from "lucide-react";
 import config from "../../../config";
 const API = config.API_URL;
+const authHeader = () => ({
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+});
 
 function AdminBanner() {
   const [banners, setBanners] = useState([]);
@@ -51,6 +54,7 @@ function AdminBanner() {
     try {
       const response = await fetch(`${API}/api/banner/${id}`, {
         method: "DELETE",
+        headers: authHeader(),
       });
 
       if (response.ok) {
@@ -72,6 +76,7 @@ function AdminBanner() {
       const response = await fetch(`${API}/api/banner/${id}/toggle`, {
         method: "PATCH",
         headers: {
+          ...authHeader(),
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ active: !currentActive }),
@@ -125,6 +130,7 @@ function AdminBanner() {
     try {
       const response = await fetch(`${API}/api/banner`, {
         method: "POST",
+        headers: authHeader(),
         body: formData,
       });
 

@@ -7,6 +7,7 @@ function UserAddForm({ roles, fighters, onSuccess, onCancel, API }) {
   });
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const token = localStorage.getItem("token");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +21,9 @@ function UserAddForm({ roles, fighters, onSuccess, onCancel, API }) {
     try {
       const res = await fetch(`${API}/api/users`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
+         },
         body: JSON.stringify({
           login: form.login, password: form.password, email: form.email,
           role_id: form.role, fighter_id: form.fighter_id || null,

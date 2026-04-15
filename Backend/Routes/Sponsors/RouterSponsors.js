@@ -2,6 +2,7 @@ const express = require("express");
 const { createUpload, getFilePath } = require("../../utils/upload");
 const db = require("../../Libs/db");
 const fs = require("fs");
+const {verifyToken, isAdmin} = require("../../auth/auth");
 
 const router = express.Router();
 const upload = createUpload("sponsors");
@@ -14,7 +15,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.post("/", upload.single("image"), (req, res) => {
+router.post("/", verifyToken, isAdmin, upload.single("image"), (req, res) => {
   const { sponsor_name, url } = req.body;
   if (!sponsor_name || !req.file)
     return res.status(400).json({ error: "Chybí název nebo obrázek" });
@@ -34,7 +35,7 @@ router.post("/", upload.single("image"), (req, res) => {
   );
 });
 
-router.put("/:id", upload.single("image"), (req, res) => {
+router.put("/:id", verifyToken, isAdmin, upload.single("image"), (req, res) => {
   const { id } = req.params;
   const { sponsor_name, url } = req.body;
   if (!sponsor_name)
@@ -79,7 +80,7 @@ router.put("/:id", upload.single("image"), (req, res) => {
   }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", verifyToken, isAdmin, (req, res) => {
   const { id } = req.params;
   db.query(
     "SELECT img_path FROM sponsors WHERE id = ?",

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { verifyToken } = require("../../auth/auth");
+const { verifyToken, isAdminOrTrainer } = require("../../auth/auth");
 const db = require("../../Libs/db");
 
 router.get("/", verifyToken, (req, res) => {
@@ -121,7 +121,7 @@ router.get("/prihlaseny", verifyToken, (req, res) => {
   );
 });
 
-router.post("/:tournamentId/fighter/:fighterId", verifyToken, (req, res) => {
+router.post("/:tournamentId/fighter/:fighterId", verifyToken, isAdminOrTrainer, (req, res) => {
   const { tournamentId, fighterId } = req.params;
 
   db.query(
@@ -142,7 +142,7 @@ router.post("/:tournamentId/fighter/:fighterId", verifyToken, (req, res) => {
   );
 });
 
-router.delete("/:id", verifyToken, (req, res) => {
+router.delete("/:id", verifyToken, isAdminOrTrainer, (req, res) => {
   db.query(
     "DELETE FROM tournament_registration WHERE id = ?",
     [req.params.id],
@@ -153,7 +153,7 @@ router.delete("/:id", verifyToken, (req, res) => {
   );
 });
 
-router.put("/:id/result", verifyToken, (req, res) => {
+router.put("/:id/result", verifyToken, isAdminOrTrainer, (req, res) => {
   const { place } = req.body;
   db.query(
     "UPDATE tournament_registration SET place = ? WHERE id = ?",

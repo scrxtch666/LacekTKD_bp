@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../../Libs/db");
-const { verifyToken } = require("../../auth/auth");
+const { verifyToken, isAdminOrTrainer } = require("../../auth/auth");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const fs = require("fs");
@@ -171,7 +171,7 @@ router.get("/admin", verifyToken, (req, res) => {
   );
 });
 
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", verifyToken, isAdminOrTrainer, async (req, res) => {
   const {
     title,
     description,
@@ -214,7 +214,7 @@ router.post("/", verifyToken, async (req, res) => {
   );
 });
 
-router.put("/:id", verifyToken, async (req, res) => {
+router.put("/:id", verifyToken, isAdminOrTrainer, async (req, res) => {
   const {
     title,
     description,
@@ -274,7 +274,7 @@ router.put("/:id", verifyToken, async (req, res) => {
   );
 });
 
-router.delete("/:id", verifyToken, (req, res) => {
+router.delete("/:id", verifyToken, isAdminOrTrainer, (req, res) => {
   const { id } = req.params;
 
   db.query(
@@ -399,7 +399,7 @@ router.delete("/:id/register", verifyToken, (req, res) => {
   );
 });
 
-router.delete("/registration/:id", verifyToken, (req, res) => {
+router.delete("/registration/:id", verifyToken, isAdminOrTrainer, (req, res) => {
   db.query(
     "DELETE FROM exam_registration WHERE id=?",
     [req.params.id],
@@ -410,7 +410,7 @@ router.delete("/registration/:id", verifyToken, (req, res) => {
   );
 });
 
-router.put("/:id/status", verifyToken, (req, res) => {
+router.put("/:id/status", verifyToken, isAdminOrTrainer, (req, res) => {
   const { status } = req.body;
   if (!["active", "hidden"].includes(status))
     return res.status(400).json({ error: "Neplatný status" });
